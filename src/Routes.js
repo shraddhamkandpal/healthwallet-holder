@@ -14,7 +14,8 @@ import ChangeUsername         from './containers/ChangeUsername'
 import ConfirmChangeUsername  from './containers/ConfirmChangeUsername'
 import SignupWithDid          from './containers/SignupWithDid'
 import ChangePassword         from './containers/ChangePassword'
-import ShareCredential        from  './containers/ShareCredential'
+import ShareCredential        from './containers/ShareCredential'
+import AcceptCredential       from './containers/AcceptCredentials'
 
 export default function Routes({ appProps }) {
   return (
@@ -32,6 +33,7 @@ export default function Routes({ appProps }) {
       <AppliedRoute path='/signup-with-did' exact component={SignupWithDid} appProps={appProps} />
       <AppliedRoute path='/change-password' exact component={ChangePassword} appProps={appProps} />
       <AppliedRoute path='/share-credentials' exact component={ShareCredential} appProps={appProps} />
+      <AppliedRoute path='/accept-credentials' exact component={AcceptCredential} appProps={appProps} />
       <AppliedRoute component={NotFound} />
     </Switch>
   )

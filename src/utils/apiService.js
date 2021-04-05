@@ -20,5 +20,10 @@ cloudWalletApi.interceptors.request.use(req => {
 	req.headers.Authorization =  token ? `Bearer ${token}` : '';
 	return req;
 });
-	
+
+export const storeSignedVCs = async (data) => {
+	const response = await cloudWalletApi.post('/wallet/credentials', data)
+    return response.data;
+};
+
 export default cloudWalletApi
