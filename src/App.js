@@ -10,8 +10,7 @@ import {TokenModalProvider} from "./containers/TokenModal";
 import {MessageService} from "./utils/messageService";
 import MessageListener from "./containers/MessageListener";
 
-import drivingLicenseLogo from './assets/images/icons/driving-license.svg';
-import companyNameLogo from './assets/images/icons/company-name.png';
+import holderLogo from './assets/images/icons/user.png';
 
 function App(props) {
   window.sdk = new SdkService()
@@ -46,8 +45,7 @@ function App(props) {
         {isAuthenticated && <MessageListener />}
         <Navbar collapseOnSelect className='navbar bg-orange'>
           <Navbar.Brand>
-            <img src={drivingLicenseLogo} className='logo-icon' alt='logo'/>
-            <img src={companyNameLogo} className='logo-name' alt='logo-name'/>
+            <img src={holderLogo} className='logo-icon' alt='logo'/>
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse>
