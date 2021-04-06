@@ -11,11 +11,13 @@
 
 .logo-icon {
   max-width: 80px;
+  width: auto;
   height: auto;
 }
 
 .logo-name {
   max-width: 300px;
+  width: auto;
   height: auto;
 }
 
@@ -26,4 +28,5 @@
 .navbar {
   padding-left: 15vw;
   padding-right: 15vw;
+  display: flex;
 }

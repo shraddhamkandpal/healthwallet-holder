@@ -8,7 +8,7 @@ export default function CredentialCard(props) {
     const credential = props.credential
     const credentialType = credential.type.join(', ')
     const issuanceDate = new Date(credential.issuanceDate).toLocaleString('en-GB', { timeZone: 'UTC' })
-
+    console.log(credential)
     let expirationDate
     if (credential.expirationDate) expirationDate = new Date(credential.expirationDate).toLocaleString('en-GB', { timeZone: 'UTC' })
 

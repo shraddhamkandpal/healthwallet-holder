@@ -7,6 +7,7 @@ import { DeleteCredentialModal } from "./DeleteCredentialModal";
 import queryString from 'query-string'
 import {ModalOpener} from "./TokenModal";
 import CredentialCard from "../vendors/CredentialCard";
+import CredentialTable from '../vendors/CredentialTable';
 
 const loadingGif = require('../static/images/loading.gif')
 
@@ -338,23 +339,27 @@ class Home extends Component {
               </label>
             } */}
 
-            <br />
-
-            { isAuthenticated && haveCredentials &&
+            {/* { isAuthenticated && haveCredentials &&
               <div className='Credentials'>
                 <p className='Title'>Credentials:</p>
                 { this.renderCredentials(verifiableCredentials) }
+              </div>
+            } */}
+
+            { isAuthenticated && haveCredentials && 
+              <div className='Credentials'>
+                <CredentialTable credentials={verifiableCredentials}/>
               </div>
             }
 
           </form>
         </div>
-        {verifiablePresentationModalCredential && (
+        {/* {verifiablePresentationModalCredential && (
             <CreateVerifiablePresentationModal
                 credential={verifiablePresentationModalCredential}
                 onClose={() => this.closeVerifiablePresentationModal()} />
         )}
-        {credentialShareRequestModalToken && <ModalOpener token={credentialShareRequestModalToken} />}
+        {credentialShareRequestModalToken && <ModalOpener token={credentialShareRequestModalToken} />} */}
       </Fragment>
     )
   }
