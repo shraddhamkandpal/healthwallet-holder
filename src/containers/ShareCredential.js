@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Table, Button, ControlLabel, FormControl, Checkbox, FormGroup, Modal} from "react-bootstrap";
+import {Alert, Table, Button, ToggleButton, ButtonGroup, Form} from "react-bootstrap";
 import {useAsync, useAsyncFn} from "react-use";
 import {useTokenModal} from "./TokenModal";
 import queryString from 'query-string'
 import {MessageService} from "../utils/messageService";
 import './ShareCredential.css';
+import { useHistory } from 'react-router-dom';
 
 function parseInfoFromToken(token) {
     try {
@@ -66,45 +67,100 @@ const ShareCredential = (props) => {
     const { open: openTokenModal } = useTokenModal()
     const { requesterDid, callbackURL } = parseInfoFromToken(credentialShareRequestToken)
     const [shouldSendMessage, setShouldSendMessage] = useState(true);
+    const history = useHistory();
+
     useEffect(() => {
       window.sdk.init().then(networkMember => {
         window.messageService = new MessageService(networkMember)
       }).catch(console.error)
   }, [])
+
     const { loading: credentialsLoading, value: credentials, error: credentialsError } = useAsync(
         () => getCredentials(credentialShareRequestToken),
         [credentialShareRequestToken]
     )
+
     const [
         { loading: createVPLoading, value: presentation, error: createVPError },
         onCreateVP
     ] = useAsyncFn(
-        () => createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, shouldSendMessage),
+        (credentials) => createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, shouldSendMessage),
         [credentialShareRequestToken, credentials, requesterDid, shouldSendMessage]
     );
+
     const [{ loading: callbackLoading, value: callbackResponse, error: callbackError }, sendVP] = useAsyncFn(
         () => sendVPToCallback(callbackURL, presentation),
         [callbackURL, presentation]
     )
+
     useEffect(() => {
         if (callbackURL && presentation) {
             sendVP()
         }
     }, [callbackURL, presentation, sendVP])
+
+    useEffect(() => {
+        if (presentation) {
+            alert('You have successfully shared the credential.')
+            history.push('/')
+        }
+        if (createVPError) {
+            alert('Something wrong came up. Please try to share again.')
+        }
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [presentation, createVPError])
+
     const shareButtonDisabled = credentialsLoading || !!credentialsError || credentials.length < 1 || createVPLoading || callbackLoading || !!presentation
-    const alert = getAlert(callbackURL, callbackLoading, callbackResponse, callbackError, credentialsError, createVPError)
+    const alert_ = getAlert(callbackURL, callbackLoading, callbackResponse, callbackError, credentialsError, createVPError)
     useEffect(() => {
         if (callbackResponse && callbackResponse.requestToken) {
             const { requestToken } = callbackResponse
             openTokenModal(requestToken)
         }
     }, [callbackResponse, openTokenModal, props.onClose])
+
+    const searchKeyDetail = (credential) => {
+        const types = credential.type
+        if (types[types.length-1] === 'NameCredentialPersonV1') {
+            return 'Name Document'
+        }
+        if (types[types.length-1] === 'IDDocumentCredentialPersonV1') {
+            if (credential.credentialSubject.data.hasIDDocument.hasIDDocument.documentType === 'driving_license') {
+                return 'Driving License'
+            }
+        }
+        return 'Cannot be found'
+    }
     
     return (
         <div className='ShareCred'>
             <div className='Form container'>
                 <h1 className='Title'>Share Credentials</h1>
-                <Button onClick={onCreateVP}>Share Credentials</Button>
+                <p>Please select which Credential you would like to share</p>
+                <Table striped bordered hover size='sm'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {(credentials || []).map((credential, index) => (
+                            <tr key={credential.id}>
+                                {console.log(credential)}
+                                <td>{index + 1}</td>
+                                <td>{credential.credentialSubject.data.givenName} {credential.credentialSubject.data.familyName}</td>
+                                <td>{searchKeyDetail(credential)}</td>
+                                <td>
+                                    <Button onClick={() => onCreateVP([credential])}>Share</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
             </div>
         </div>
     )
