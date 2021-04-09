@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import {storeSignedVCs} from '../utils/apiService';
 import {Button} from 'react-bootstrap';
 import DisplayCredentials from './DisplayCredentials';
+import './ShareCredential.css';
 
 const AcceptCredentials = (props) => {
     const [cred, setCred] = useState();
@@ -25,6 +26,7 @@ const AcceptCredentials = (props) => {
         try {
             const credential = await fetch(endPoint).then(res => res.json())
             console.log(credential)
+            if (credential.httpStatusCode === 500) return
             setCred(credential)
         } catch (error){
             console.log(error)
@@ -57,10 +59,11 @@ const AcceptCredentials = (props) => {
     }, [])
 
     return (
-        <div className='tutorial'>
-          <div className='tutorial__step'>
+        <div className='ShareCred'>
+          <div className='Form container'>
             { cred ? (
               <>
+                <h1 className='Title'>Approved Verifiable Credential</h1>
                 <DisplayCredentials cred={cred}/>
                 <Button style={{display: 'block', margin: '10px 0 0 0'}} onClick={() => saveCredential(cred)}>Save VC</Button>       
                 <Button style={{display: 'block', margin: '10px 0 0 0'}} onClick={() => props.history.push('/')}>Reject VC</Button>       

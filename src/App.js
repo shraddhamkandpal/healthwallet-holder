@@ -28,8 +28,6 @@ function App(props) {
 
   async function handleLogout(event) {
     event.preventDefault()
-    props.setAcceptVCLink(null)
-    props.setShareRequestToken(null)
     userHasAuthenticated(false)
 
     try {
