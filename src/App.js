@@ -13,6 +13,8 @@ import MessageListener from "./containers/MessageListener";
 function App(props) {
   window.sdk = new SdkService()
   const [isAuthenticated, userHasAuthenticated] = useState(false)
+  const [shareRequestToken, setShareRequestToken] = useState(null);
+  const [acceptVCLink, setAcceptVCLink] = useState(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -26,7 +28,8 @@ function App(props) {
 
   async function handleLogout(event) {
     event.preventDefault()
-
+    props.setAcceptVCLink(null)
+    props.setShareRequestToken(null)
     userHasAuthenticated(false)
 
     try {
@@ -90,7 +93,7 @@ function App(props) {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        <Routes appProps={{ isAuthenticated, userHasAuthenticated }} />
+        <Routes appProps={{ isAuthenticated, userHasAuthenticated, shareRequestToken,  setShareRequestToken, acceptVCLink, setAcceptVCLink}} />
       </TokenModalProvider>
     </div>
   )

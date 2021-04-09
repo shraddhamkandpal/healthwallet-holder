@@ -19,7 +19,18 @@ export default function Login(props) {
     try {
       networkMember = await window.sdk.fromLoginAndPassword(username, password)
       props.userHasAuthenticated(true)
-      props.history.push('/', { username })
+      if (props.acceptVCLink){
+        console.log('routing to accept page')
+        props.history.push(`/accept-credentials?vcURL=${props.acceptVCLink}`)
+      }
+      else if (props.shareRequestToken){
+        console.log('routing to share page')
+        props.history.push(`/share-credentials?token=${props.shareRequestToken}`)
+      }
+      else {
+        props.history.push('/', { username })
+      }
+      
     } catch (error) {
       alert(error)
     }

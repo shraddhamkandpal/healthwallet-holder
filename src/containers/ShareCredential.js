@@ -17,6 +17,7 @@ function parseInfoFromToken(token) {
         return {}
     }
 }
+
 async function getCredentials(credentialShareRequestToken) {
     const credentials = await window.sdk.getCredentials(credentialShareRequestToken)
     if (!Array.isArray(credentials) || credentials.length < 1) {
@@ -24,6 +25,7 @@ async function getCredentials(credentialShareRequestToken) {
     }
     return credentials
 }
+
 async function createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, shouldSendMessage) {
     const credentialShareResponseToken = await window.sdk.createCredentialShareResponseToken(credentialShareRequestToken, credentials)
     console.log('credentialShareResponseToken: ', credentialShareResponseToken);
@@ -102,6 +104,7 @@ const ShareCredential = (props) => {
     useEffect(() => {
         if (presentation) {
             alert('You have successfully shared the credential.')
+            props.setShareRequestToken(null)
             history.push('/')
         }
         if (createVPError) {
@@ -132,6 +135,26 @@ const ShareCredential = (props) => {
         }
         return 'Cannot be found'
     }
+
+    useEffect(() => {
+        const checkLogin = async () => {
+            try {
+                const { did } = await window.sdk.getDidAndCredentials();
+                props.userHasAuthenticated(true)
+            } catch (error){
+                if(queryString.parse(props.location.search).token){
+                  props.setShareRequestToken(queryString.parse(props.location.search).token);
+                }
+                alert('Please login.')
+                props.history.push('/login')
+            }
+        }
+        try {
+          checkLogin()
+        } catch (error) {
+          console.log(error)
+        }
+      }, [])
     
     return (
         <div className='ShareCred'>
