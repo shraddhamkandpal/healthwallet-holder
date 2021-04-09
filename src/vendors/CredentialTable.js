@@ -30,6 +30,14 @@ const CredentialTable = ({ credentials }) => {
       setVCData(initialiseVCData(credentials))
     }, [])
 
+    const extractEmailFromIDDocument = (cred) => {
+      if (cred.hasIDDocument){
+        return JSON.parse(cred.hasIDDocument.hasIDDocument.idClass).email
+      } else {
+        return null
+      }
+    }
+
     return <div>
         <Table bordered>
               <thead className="thead-light">
@@ -49,7 +57,7 @@ const CredentialTable = ({ credentials }) => {
                         <th scope='row'>{index+1}</th>
                         <td>{cred.givenName || cred.name}</td>
                         <td>{cred.familyName || ''}</td>
-                        <td>{cred.email || ''}</td>
+                        <td>{cred.email || extractEmailFromIDDocument(cred) || '' }</td>
                         <td>{cred.hasIDDocument ?  cred.hasIDDocument.hasIDDocument.documentType : 'ID Document'}</td>
                       </tr>
                     )
