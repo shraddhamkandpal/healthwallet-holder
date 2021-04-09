@@ -1,47 +1,56 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Table } from 'react-bootstrap'
 
 const CredentialTable = ({ credentials }) => {
-    console.log(credentials)
-    // To get Name Credential credential.credentialSubject.data.givenName
-    // To get Driving License credential.credentialSubject.data.hasIDDocument.hasIDDocument.documentType
-    const searchQueue = {
-      NameCredentialPersonV1: ['givenName'],
-      IDDocumentCredentialPersonV1: ['documentType']
-    }
+    const [vcData, setVCData] = useState([]);
 
-    const somefunc = (credentials) => {
-      let output2 = credentials.map((cred) => {
-        let template = {
-          detail: cred.credential.credentialSubject.data.givenName,
-          credentialtype: cred.credential.type[cred.credential.type.length-1]
+    const removeProp = (obj, propToDelete) => {
+      for (let property in obj) {
+        if (obj.hasOwnProperty(property)) {
+          if (property === propToDelete) {
+            delete obj[property];
+          } else if (typeof obj[property] == "object") {
+            removeProp(obj[property], propToDelete);
+          }
         }
-
-        // console.log(template)
-        return template
-      })
-      return output2
+      }
+      return obj
     }
 
-    console.log(somefunc(credentials))
+    const initialiseVCData = (vcData) => {
+      let processedVCData = []
+      for (let vc in vcData) {
+        processedVCData[vc] = vcData[vc].credential.credentialSubject.data
+        processedVCData[vc] = removeProp(processedVCData[vc], '@type')
+      }
+      return processedVCData
+    }
+
+    useEffect(() => {
+      setVCData(initialiseVCData(credentials))
+    }, [])
+
     return <div>
         <Table bordered>
               <thead className="thead-light">
                 <tr>
                   <th>Index</th>
-                  <th>Detail</th>
+                  <th>Given Name</th>
+                  <th>Family Name</th>
+                  <th>Email</th>
                   <th>VC Type</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  credentials.map((cred, index) => {
+                  vcData.map((cred, index) => {
                     return (
                       <tr>
                         <th scope='row'>{index+1}</th>
-                        <td>{cred.credential.id}</td>
-                        {/* <td>{cred.credential.credentialSubject.data.givenName}</td> */}
-                        <td>{cred.credential.type[cred.credential.type.length-1]}</td>
+                        <td>{cred.givenName || cred.name}</td>
+                        <td>{cred.familyName || ''}</td>
+                        <td>{cred.email || ''}</td>
+                        <td>{cred.hasIDDocument ?  cred.hasIDDocument.hasIDDocument.documentType : 'ID Document'}</td>
                       </tr>
                     )
                   })
