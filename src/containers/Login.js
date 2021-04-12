@@ -55,7 +55,7 @@ export default function Login(props) {
   return (
     <div className='Login'>
       <form className='Form' onSubmit={handleSubmit}>
-        <h1 className='Title'>Login</h1>
+        <h1 className='Title'>Holder Login</h1>
         <p className='Info'>
           Login in order to continue
         </p>
