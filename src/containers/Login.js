@@ -41,7 +41,7 @@ export default function Login(props) {
 
   return (
     <div className='Login'>
-      <form className='Form' onSubmit={handleSubmit}>
+      <div className='Form'>
         <h1 className='Title'>Holder Login</h1>
         <p className='Info'>
           Login in order to continue
@@ -66,10 +66,10 @@ export default function Login(props) {
           />
         </FormGroup>
         <Link className='Link' to='/reset-password'>Forgot password?</Link>
-        <Button className='Button' block bsSize='large' disabled={!validateForm()} type='submit'>
+        <Button className='Button' block bsSize='large' disabled={!validateForm()} onClick={handleSubmit} type='submit'>
           Login
         </Button>
-      </form>
+      </div>
     </div>
   )
 }
