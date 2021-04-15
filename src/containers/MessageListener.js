@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-script-url */
 import JwtService from "@affinidi/common/dist/services/JwtService";
 import React, { useEffect, useState } from "react";
 import { format } from "timeago.js";

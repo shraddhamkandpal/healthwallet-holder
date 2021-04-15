@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 import React, {useEffect, useState} from "react";
 import {Alert, Table, Button, ControlLabel, FormControl, Checkbox, FormGroup, Modal} from "react-bootstrap";
 import {useAsync, useAsyncFn} from "react-use";

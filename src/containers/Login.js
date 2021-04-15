@@ -18,7 +18,10 @@ export default function Login(props) {
     let networkMember
     try {
       networkMember = await window.sdk.fromLoginAndPassword(username, password)
-      props.userHasAuthenticated(true)
+      if(networkMember){
+        props.userHasAuthenticated(true)
+      }
+      
       if (props.acceptVCLink){
         console.log('routing to accept page')
         props.history.push(`/accept-credentials?vcURL=${props.acceptVCLink}`)
@@ -33,22 +36,6 @@ export default function Login(props) {
       
     } catch (error) {
       alert(error)
-    }
-
-    try {
-      const did = networkMember.did
-      console.log({ did })
-
-      const objToCrypt = { name: 'Hola, amigos' }
-      console.log('before encrypt')
-
-      const encryptedMessage = await networkMember.createEncryptedMessage(did, objToCrypt)
-      console.log({ encryptedMessage })
-
-      const decryptedMessage = await networkMember.readEncryptedMessage(encryptedMessage)
-      console.log({ decryptedMessage })
-    } catch (error) {
-      console.log(error)
     }
   }
 

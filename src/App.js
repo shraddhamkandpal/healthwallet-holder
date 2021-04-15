@@ -6,7 +6,6 @@ import { Nav, Navbar, NavItem } from 'react-bootstrap'
 import './App.css'
 
 import SdkService from './utils/sdkService'
-import {TokenModalProvider} from "./containers/TokenModal";
 import {MessageService} from "./utils/messageService";
 import MessageListener from "./containers/MessageListener";
 
@@ -40,7 +39,6 @@ function App(props) {
 
   return (
     <div className='App'>
-      <TokenModalProvider>
         {isAuthenticated && <MessageListener />}
         <Navbar>
           <Navbar.Header>
@@ -92,7 +90,6 @@ function App(props) {
           </Navbar.Collapse>
         </Navbar>
         <Routes appProps={{ isAuthenticated, userHasAuthenticated, shareRequestToken,  setShareRequestToken, acceptVCLink, setAcceptVCLink}} />
-      </TokenModalProvider>
     </div>
   )
 }

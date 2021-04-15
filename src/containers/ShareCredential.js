@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, {useEffect, useState} from "react";
-import {Alert, Table, Button, ToggleButton, ButtonGroup, Form} from "react-bootstrap";
+import {Table, Button} from "react-bootstrap";
 import {useAsync, useAsyncFn} from "react-use";
 import {useTokenModal} from "./TokenModal";
 import queryString from 'query-string'
@@ -68,7 +69,7 @@ const ShareCredential = (props) => {
     console.log('Credential Share Request Token', credentialShareRequestToken);
     const { open: openTokenModal } = useTokenModal()
     const { requesterDid, callbackURL } = parseInfoFromToken(credentialShareRequestToken)
-    const [shouldSendMessage, setShouldSendMessage] = useState(true);
+    const [shouldSendMessage] = useState(true);
     const history = useHistory();
 
     useEffect(() => {
@@ -114,8 +115,6 @@ const ShareCredential = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [presentation, createVPError])
 
-    const shareButtonDisabled = credentialsLoading || !!credentialsError || credentials.length < 1 || createVPLoading || callbackLoading || !!presentation
-    const alert_ = getAlert(callbackURL, callbackLoading, callbackResponse, callbackError, credentialsError, createVPError)
     useEffect(() => {
         if (callbackResponse && callbackResponse.requestToken) {
             const { requestToken } = callbackResponse
@@ -140,7 +139,9 @@ const ShareCredential = (props) => {
         const checkLogin = async () => {
             try {
                 const { did } = await window.sdk.getDidAndCredentials();
-                props.userHasAuthenticated(true)
+                if (did){
+                  props.userHasAuthenticated(true)
+                }
             } catch (error){
                 if(queryString.parse(props.location.search).token){
                   props.setShareRequestToken(queryString.parse(props.location.search).token);
@@ -154,6 +155,7 @@ const ShareCredential = (props) => {
         } catch (error) {
           console.log(error)
         }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [])
     
     return (
@@ -172,7 +174,7 @@ const ShareCredential = (props) => {
                     </thead>
                     <tbody>
                         {(credentials || []).map((credential, index) => (
-                            <tr key={credential.id}>
+                            <tr key={index+1}>
                                 {console.log(credential)}
                                 <td>{index + 1}</td>
                                 <td>{credential.credentialSubject.data.givenName} {credential.credentialSubject.data.familyName}</td>
@@ -190,24 +192,3 @@ const ShareCredential = (props) => {
 }
 
 export default ShareCredential;
-
-function getAlert(callbackURL, callbackLoading, callbackResponse, callbackError, credentialsError, createVPError) {
-    if (callbackURL && (callbackLoading || callbackResponse || callbackError)) {
-        if (callbackLoading) {
-            return { message: 'Sending VP to callbackURL.', bsStyle: 'warning' }
-        }
-        if (callbackResponse) {
-            return { message: 'Sent VP to callbackURL successfully.', bsStyle: 'success' }
-        }
-        if (callbackError) {
-            return { message: `There was an error sending VP to callbackURL. Error: ${callbackError.message}`, bsStyle: 'danger' }
-        }
-    }
-    if (credentialsError) {
-        return { message: `Could not list credentials. Error: ${credentialsError.message}`, bsStyle: 'danger' }
-    }
-    if (createVPError) {
-        return { message: `Could not create VP. Error: ${createVPError.message}`, bsStyle: 'danger' }
-    }
-    return undefined
-}

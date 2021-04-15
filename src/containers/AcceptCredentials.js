@@ -7,7 +7,7 @@ import './ShareCredential.css';
 
 const AcceptCredentials = (props) => {
     const [cred, setCred] = useState();
-
+    
     const saveCredential = async (credential) => {
         try {
             const {credentialIds} = await storeSignedVCs({
@@ -37,7 +37,9 @@ const AcceptCredentials = (props) => {
       const checkLogin = async () => {
           try {
               const { did } = await window.sdk.getDidAndCredentials();
-              props.userHasAuthenticated(true)
+              if (did){
+                props.userHasAuthenticated(true)
+              }
           } catch (error){
               if(queryString.parse(props.location.search).vcURL){
                 props.setAcceptVCLink(queryString.parse(props.location.search).vcURL);
@@ -56,6 +58,7 @@ const AcceptCredentials = (props) => {
       } catch (error) {
         console.log(error)
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
