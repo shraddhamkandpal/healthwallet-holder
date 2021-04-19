@@ -61,28 +61,14 @@ function App(props) {
             <Nav pullRight>
               { isAuthenticated
                 ? <>
-                    <LinkContainer to='/change-username'>
-                       <NavItem>Change Attribute</NavItem>
-                     </LinkContainer>
-
-                    <LinkContainer to='/change-password'>
-                       <NavItem>Change Password</NavItem>
-                     </LinkContainer>
-
                     <NavItem onClick={handleLogout}>Logout</NavItem>
                   </>
                 : <>
-                    <LinkContainer to='/signup-with-did'>
-                      <NavItem>Sign Up with DID</NavItem>
-                    </LinkContainer>
                     <LinkContainer to='/signup'>
                       <NavItem>Sign Up</NavItem>
                     </LinkContainer>
                     <LinkContainer to='/login'>
                       <NavItem>Login</NavItem>
-                    </LinkContainer>
-                    <LinkContainer to='/passwordless-login'>
-                      <NavItem>Passwordless Login</NavItem>
                     </LinkContainer>
                   </>
               }
