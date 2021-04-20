@@ -58,11 +58,11 @@ class Home extends Component {
         <div className='Home'>
           <form className='Form container'>
             <h1 className='Title'>Wallet</h1>
-              { isAuthenticated && haveCredentials && 
+              { isAuthenticated && haveCredentials ? 
                 <div className='Credentials'>
                   <CredentialTable credentials={verifiableCredentials}/>
                 </div>
-              }
+              : <p>You have no credentials.</p>}
           </form>
         </div>
       </Fragment>
