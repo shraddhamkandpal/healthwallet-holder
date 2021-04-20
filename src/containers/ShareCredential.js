@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Table, Button} from "react-bootstrap";
 import {useAsync, useAsyncFn} from "react-use";
-import {useTokenModal} from "./TokenModal";
 import queryString from 'query-string'
 import {MessageService} from "../utils/messageService";
 import './ShareCredential.css';
-import { useHistory } from 'react-router-dom';
+
 
 function parseInfoFromToken(token) {
     try {
         const { payload } = window.sdk.parseToken(token)
+        console.log('payload: ', payload);
         const callbackURL = (payload.interactionToken || {}).callbackURL || undefined
         const requesterDid = payload.iss
         return { requesterDid, callbackURL }
@@ -27,50 +27,22 @@ async function getCredentials(credentialShareRequestToken) {
     return credentials
 }
 
-async function createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, shouldSendMessage) {
+async function createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid) {
     const credentialShareResponseToken = await window.sdk.createCredentialShareResponseToken(credentialShareRequestToken, credentials)
     console.log('credentialShareResponseToken: ', credentialShareResponseToken);
-    const verifiablePresentation = await window.sdk.createPresentationFromChallenge(credentialShareRequestToken, credentials, 'domain')
-    console.log('verifiablePresentation: ', verifiablePresentation);
-    console.log('-----');
-    console.log('shouldSendMessage: ', shouldSendMessage);
     console.log('requesterDid: ', requesterDid);
-    if (shouldSendMessage && requesterDid) {
+    if (requesterDid && credentialShareResponseToken) {
         console.log('-----if-------');
-        console.log(window);
         console.log(window.messageService);
-        console.log(window.messageService.send);
         const mes = await window.messageService.send(requesterDid, { token: credentialShareResponseToken })
         console.log('mes: ', mes);
     }
-    return { credentialShareResponseToken, verifiablePresentation }
+    return { credentialShareResponseToken }
 }
-async function sendVPToCallback(callbackURL, { verifiablePresentation }) {
-    const response = await fetch(callbackURL, {
-        method: 'POST',
-        // mode: 'no-cors',
-        cache: 'no-cache',
-        credentials: 'omit',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ vp: verifiablePresentation })
-    })
-    if (response.status < 200 || response.status > 299) {
-        throw new Error(`${callbackURL} responded with ${response.statusText}`)
-    }
-    if (response.status === 204) {
-        return undefined
-    }
-    return response.json()
-}
+
 const ShareCredential = (props) => {
     const credentialShareRequestToken = queryString.parse(props.location.search).token || ''
-    console.log('Credential Share Request Token', credentialShareRequestToken);
-    const { open: openTokenModal } = useTokenModal()
     const { requesterDid, callbackURL } = parseInfoFromToken(credentialShareRequestToken)
-    const [shouldSendMessage] = useState(true);
-    const history = useHistory();
 
     useEffect(() => {
       window.sdk.init().then(networkMember => {
@@ -87,40 +59,9 @@ const ShareCredential = (props) => {
         { loading: createVPLoading, value: presentation, error: createVPError },
         onCreateVP
     ] = useAsyncFn(
-        (credentials) => createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, shouldSendMessage),
-        [credentialShareRequestToken, credentials, requesterDid, shouldSendMessage]
+        (credentials) => createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid),
+        [credentialShareRequestToken, credentials, requesterDid]
     );
-
-    const [{ loading: callbackLoading, value: callbackResponse, error: callbackError }, sendVP] = useAsyncFn(
-        () => sendVPToCallback(callbackURL, presentation),
-        [callbackURL, presentation]
-    )
-
-    useEffect(() => {
-        if (callbackURL && presentation) {
-            sendVP()
-        }
-    }, [callbackURL, presentation, sendVP])
-
-    useEffect(() => {
-        if (presentation) {
-            alert('You have successfully shared the credential.')
-            props.setShareRequestToken(null)
-            history.push('/')
-        }
-        if (createVPError) {
-            alert('Something wrong came up. Please try to share again.')
-        }
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [presentation, createVPError])
-
-    useEffect(() => {
-        if (callbackResponse && callbackResponse.requestToken) {
-            const { requestToken } = callbackResponse
-            openTokenModal(requestToken)
-        }
-    }, [callbackResponse, openTokenModal, props.onClose])
 
     const searchKeyDetail = (credential) => {
         const types = credential.type
@@ -132,7 +73,7 @@ const ShareCredential = (props) => {
                 return 'Driving License'
             }
         }
-        return 'Cannot be found'
+        return credential.type
     }
 
     useEffect(() => {
