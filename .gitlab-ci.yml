@@ -41,7 +41,7 @@ build:
   image: node
   script:
     - echo "Build started"
-    - npm run build
+    - REACT_APP_API_KEY=$REACT_APP_API_KEY REACT_APP_API_KEY_HASH=$REACT_APP_API_KEY_HASH REACT_APP_ENVIRONMENT=prod npm run build
     - echo "Build successfull"
   artifacts:
     paths:
