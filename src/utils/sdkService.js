@@ -48,14 +48,6 @@ class SdkService {
     return new this.sdk(encryptionKey, encryptedSeed, { ...SDK_OPTIONS, cognitoUserTokens: { accessToken }})
   }
 
-  async initTestKeyStoneIssuer() {
-    if (keyStoneTestEncryptionKey && keyStoneTestEncryptedSeed) {
-      return new this.sdk(keyStoneTestEncryptionKey, keyStoneTestEncryptedSeed, SDK_OPTIONS)
-    }
-
-    return this.init()
-  }
-
   async signOut() {
     await cloudWalletApi.post('/users/logout')
     localStorage.removeItem(SDK_ACCESS_TOKEN)
@@ -73,12 +65,6 @@ class SdkService {
     const response =  await cloudWalletApi.post('/users/signup/confirm', signUpConfirmParams)
     const { accessToken } = response.data
     SdkService._saveAccessTokenToLocalStorage(accessToken)
-  }
-
-  async resendSignUpConfirmationCode(username, messageParameters) {
-    // ISSUE: CommonNetworkMember.resendSignUpConfirmationCode does not call CommonNetworkMember.setEnvironmentVarialbles(options)
-    // So the below call will always return 'User not found'
-    await this.sdk.resendSignUpConfirmationCode(username, SDK_OPTIONS, messageParameters)
   }
 
   async getDidAndCredentials() {
