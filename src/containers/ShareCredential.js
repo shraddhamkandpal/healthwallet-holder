@@ -27,7 +27,7 @@ async function getCredentials(credentialShareRequestToken) {
     return credentials
 }
 
-async function createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid) {
+async function createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, history) {
     const credentialShareResponseToken = await window.sdk.createCredentialShareResponseToken(credentialShareRequestToken, credentials)
     console.log('credentialShareResponseToken: ', credentialShareResponseToken);
     console.log('requesterDid: ', requesterDid);
@@ -36,6 +36,8 @@ async function createCredentialShareResponseToken(credentialShareRequestToken, c
         console.log(window.messageService);
         const mes = await window.messageService.send(requesterDid, { token: credentialShareResponseToken })
         console.log('mes: ', mes);
+        alert('Credential shared successfully!')
+        history.push('/')
     }
     return { credentialShareResponseToken }
 }
@@ -59,7 +61,7 @@ const ShareCredential = (props) => {
         { loading: createVPLoading, value: presentation, error: createVPError },
         onCreateVP
     ] = useAsyncFn(
-        (credentials) => createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid),
+        (credentials) => createCredentialShareResponseToken(credentialShareRequestToken, credentials, requesterDid, props.history),
         [credentialShareRequestToken, credentials, requesterDid]
     );
 
