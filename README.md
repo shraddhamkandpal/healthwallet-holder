@@ -1,4 +1,4 @@
-# Affinidi Use Case Implementation - Driving License - Holder
+# Affinidi POC - Health Wallet - Holder
 
 ## Table of contents
 
@@ -13,7 +13,7 @@
 
 ## Introduction
 
-Welcome to Health Wallet Use Case - Holder application. In this application, you will be able to see how does a user access his/her Affinidi Health Wallet which will stores all of their health records. Holder application is important as other than viewing the records, it can used to accept or to approve sharing of records.
+Welcome to Health Wallet Use Case - Holder application. In this application, you will be able to see how does a user access his/her  Health Wallet which will stores all of their health records. Holder application is important as other than viewing the records, it can used to accept or to approve sharing of health records.
 
 ## Initial Set Up
 
