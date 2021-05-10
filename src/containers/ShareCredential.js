@@ -36,7 +36,7 @@ async function createCredentialShareResponseToken(credentialShareRequestToken, c
         console.log(window.messageService);
         const mes = await window.messageService.send(requesterDid, { token: credentialShareResponseToken })
         console.log('mes: ', mes);
-        alert('Credential shared successfully!')
+        alert('Record shared successfully!')
         history.push('/')
     }
     return { credentialShareResponseToken }
@@ -74,6 +74,9 @@ const ShareCredential = (props) => {
             if (credential.credentialSubject.data.hasIDDocument.hasIDDocument.documentType === 'driving_license') {
                 return 'Driving License'
             }
+            if (credential.credentialSubject.data.hasIDDocument.hasIDDocument.documentType === 'prescription') {
+                return 'Prescription'
+            }
         }
         return credential.type
     }
@@ -105,13 +108,14 @@ const ShareCredential = (props) => {
         <div className='ShareCred'>
             <div className='Form container'>
                 <h1 className='Title'>Share Credentials</h1>
-                <p>Please select which Credential you would like to share</p>
+                <p>Please select which Health Record you would like to share</p>
                 <Table striped bordered hover size='sm'>
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Type</th>
+                            <th>Issuer</th>
+                            <th>Expiry Date</th>
+                            <th>RecordType</th>
                             <th>Select</th>
                         </tr>
                     </thead>
@@ -120,7 +124,8 @@ const ShareCredential = (props) => {
                             <tr key={index+1}>
                                 {console.log(credential)}
                                 <td>{index + 1}</td>
-                                <td>{credential.credentialSubject.data.givenName} {credential.credentialSubject.data.familyName}</td>
+                                <td>{credential.credentialSubject.data.hasIDDocument.hasIDDocument.issuer}</td>
+                                <td>{credential.credentialSubject.data.hasIDDocument.hasIDDocument.issueDate}</td>
                                 <td>{searchKeyDetail(credential)}</td>
                                 <td>
                                     <Button onClick={() => onCreateVP([credential])}>Share</Button>

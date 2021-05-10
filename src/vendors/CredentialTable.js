@@ -30,9 +30,9 @@ const CredentialTable = ({ credentials }) => {
       setVCData(initialiseVCData(credentials))
     }, [credentials])
 
-    const extractEmailFromIDDocument = (cred) => {
+    const extractLinkFromIDDocument = (cred, key) => {
       if (cred.hasIDDocument){
-        return JSON.parse(cred.hasIDDocument.hasIDDocument.idClass).email
+        return JSON.parse(cred.hasIDDocument.hasIDDocument.idClass).drivingClass
       } else {
         return null
       }
@@ -43,10 +43,10 @@ const CredentialTable = ({ credentials }) => {
               <thead className="thead-light">
                 <tr>
                   <th>Index</th>
-                  <th>Given Name</th>
-                  <th>Family Name</th>
-                  <th>Email</th>
-                  <th>VC Type</th>
+                  <th>Issuer</th>
+                  <th>Expiry Date</th>
+                  <th>Record Type</th>
+                  <th>Link</th>
                 </tr>
               </thead>
               <tbody>
@@ -55,10 +55,10 @@ const CredentialTable = ({ credentials }) => {
                     return (
                       <tr key={index+1}>
                         <th scope='row'>{index+1}</th>
-                        <td>{cred.givenName || cred.name}</td>
-                        <td>{cred.familyName || ''}</td>
-                        <td>{cred.email || extractEmailFromIDDocument(cred) || '' }</td>
+                        <td>{cred.hasIDDocument ?  cred.hasIDDocument.hasIDDocument.issuer : ''}</td>
+                        <td>{cred.hasIDDocument ?  cred.hasIDDocument.hasIDDocument.issueDate : ''}</td>
                         <td>{cred.hasIDDocument ?  cred.hasIDDocument.hasIDDocument.documentType : 'ID Document'}</td>
+                        <td><a>{cred.link || extractLinkFromIDDocument(cred) || '' }</a></td>
                       </tr>
                     )
                   })

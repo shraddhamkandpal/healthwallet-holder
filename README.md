@@ -13,9 +13,7 @@
 
 ## Introduction
 
-Welcome to Driving License Use Case - Holder application. In this application, you will be able to see how does a user access his/her Affinidi Wallet which will stores all of their verifiable credentials. Holder application is important as other than viewing the credentials, it can used to accept or to approve sharing of credentials.
-
-You can either run this program in your local machine or try it out here: https://usecases.drivinglicense-holder.vc-generator.com/
+Welcome to Health Wallet Use Case - Holder application. In this application, you will be able to see how does a user access his/her Affinidi Health Wallet which will stores all of their health records. Holder application is important as other than viewing the records, it can used to accept or to approve sharing of records.
 
 ## Initial Set Up
 

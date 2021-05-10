@@ -56,9 +56,9 @@ export default function Signup(props) {
       <form className='Form' onSubmit={handleSignup}>
         <h1 className='Title'>Create account</h1>
         <p className='Info'>
-          Welcome to your personal wallet. Here you will be able to store, view and manage your digital identity.
+          Welcome to your health wallet. Here you will be able to store, view and manage your health records.
           <br/><br/>
-          In order to access your wallet you will need to set up a password first
+          In order to access your health wallet you will need to set up a password first
         </p>
         { isUserNameFieldVisible &&
           <FormGroup controlId='username' bsSize='large'>

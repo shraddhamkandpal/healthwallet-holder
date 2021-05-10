@@ -42,7 +42,7 @@ export default function Login(props) {
   return (
     <div className='Login'>
       <div className='Form'>
-        <h1 className='Title'>Holder Login</h1>
+        <h1 className='Title'>Health Wallet Login</h1>
         <p className='Info'>
           Login in order to continue
         </p>

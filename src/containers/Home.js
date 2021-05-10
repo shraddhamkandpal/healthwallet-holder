@@ -62,7 +62,7 @@ class Home extends Component {
                 <div className='Credentials'>
                   <CredentialTable credentials={verifiableCredentials}/>
                 </div>
-              : <p>You have no credentials.</p>}
+              : <p>You have no health records.</p>}
           </form>
         </div>
       </Fragment>

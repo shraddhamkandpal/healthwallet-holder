@@ -14,7 +14,7 @@ const AcceptCredentials = (props) => {
                 data: [credential]
               });
             console.log(credentialIds[0]);
-          alert('You have saved your credential.')
+          alert('You have saved your health record.')
           props.setAcceptVCLink(null)
           props.history.push('/');
         } catch (error){
@@ -66,12 +66,12 @@ const AcceptCredentials = (props) => {
           <div className='Form container'>
             { cred ? (
               <>
-                <h1 className='Title'>Approved Verifiable Credential</h1>
+                <h1 className='Title'>Verified Health Record</h1>
                 <DisplayCredentials cred={cred}/>
                 <Button style={{display: 'block', margin: '10px 0 0 0'}} onClick={() => saveCredential(cred)}>Save VC</Button>       
                 <Button style={{display: 'block', margin: '10px 0 0 0'}} onClick={() => props.history.push('/')}>Reject VC</Button>       
               </>
-              ) : <h3>No Verifiable Credential found</h3> }
+              ) : <h3>No Verifiable Health Record</h3> }
             
         </div>
       </div>
